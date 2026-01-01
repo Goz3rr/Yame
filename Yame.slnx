@@ -1,5 +1,9 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
   <Project Path="Yame.Core/Yame.Core.csproj" />
+  <Project Path="Yame.Parser.Tests/Yame.Parser.Tests.csproj" Id="83ee21e7-d7c6-4ee1-845f-38c15ea7f7a1" />
   <Project Path="Yame.Parser/Yame.Parser.csproj" />
   <Project Path="Yame/Yame.csproj" />
 </Solution>
