@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Yame.Core/Yame.Core.csproj" />
+  <Project Path="Yame.Parser/Yame.Parser.csproj" />
+  <Project Path="Yame/Yame.csproj" />
+</Solution>
