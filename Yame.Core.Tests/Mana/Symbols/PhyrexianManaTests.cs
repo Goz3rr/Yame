@@ -1,4 +1,5 @@
 ﻿using Yame.Core.Mana;
+using Yame.Core.Mana.Symbols;
 
 namespace Yame.Core.Tests.Mana.Symbols;
 

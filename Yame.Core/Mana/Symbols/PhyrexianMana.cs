@@ -1,6 +1,4 @@
-﻿using Yame.Core.Mana.Symbols;
-
-namespace Yame.Core.Mana;
+﻿namespace Yame.Core.Mana.Symbols;
 
 public record PhyrexianMana : ColoredMana
 {
@@ -8,5 +6,5 @@ public record PhyrexianMana : ColoredMana
         : base(color)
     { }
 
-    public override string ToString() => $"{{{ManaColorHelper.ToToken(Color)}/P}}";
+    internal override (string[] Symbols, string[] Suffix) GetSymbolComponents() => ([ManaColorHelper.ToToken(Color)], ["P"]);
 }

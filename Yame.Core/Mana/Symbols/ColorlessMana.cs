@@ -2,5 +2,5 @@
 
 public record ColorlessMana : ManaSymbol
 {
-    public override string ToString() => "{C}";
+    internal override (string[] Symbols, string[] Suffix) GetSymbolComponents() => (["C"], []);
 }

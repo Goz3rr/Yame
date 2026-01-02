@@ -4,5 +4,5 @@ public record VariableMana(char Symbol) : ManaSymbol
 {
     public override int ManaValue => 0;
 
-    public override string ToString() => $"{{{Symbol}}}";
+    internal override (string[] Symbols, string[] Suffix) GetSymbolComponents() => ([Symbol.ToString()], []);
 }

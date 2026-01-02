@@ -23,7 +23,7 @@ public partial class ManaNotationParser
     }
 
     private static bool IsValidHybridComponent(ManaSymbol symbol) =>
-        symbol is ColoredMana or GenericMana or PhyrexianMana;
+        symbol is ColoredMana or ColorlessMana or GenericMana or PhyrexianMana;
 
     private static ManaSymbol ParseSymbol(string token)
     {
@@ -65,20 +65,14 @@ public partial class ManaNotationParser
         if (int.TryParse(token, out int value))
             return new GenericMana(value);
 
-        if (token.Length == 1 && "XYZ".Contains(token))
-            return new VariableMana(token[0]);
-
-        // TODO: Snow
-        if (token == "S")
-            throw new NotImplementedException();
-
-        // TODO: Legendary
-        if (token == "L")
-            throw new NotImplementedException();
-
-        if (token.Length == 1)
-            return new ColoredMana(ManaColorHelper.Parse(token));
-
-        throw new FormatException($"Unknown mana symbol: {token}");
+        return token switch
+        {
+            "X" or "Y" or "Z" => new VariableMana(token[0]),
+            "C" => new ColorlessMana(),
+            "S" => throw new NotImplementedException(),
+            "L" => throw new NotImplementedException(),
+            "W" or "U" or "B" or "R" or "G" => new ColoredMana(ManaColorHelper.Parse(token)),
+            _ => throw new FormatException($"Unknown mana symbol: {token}"),
+        };
     }
 }

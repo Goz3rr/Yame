@@ -30,7 +30,7 @@ public class ColorlessManaTests
     }
 
     [Fact]
-    public void ColoredMana_ToString_IsCanonical()
+    public void ColorlessMana_ToString_IsCanonical()
     {
         var mana = new ColorlessMana();
 

@@ -4,5 +4,5 @@ public record GenericMana(int Amount) : ManaSymbol
 {
     public override int ManaValue => Amount;
 
-    public override string ToString() => $"{{{Amount}}}";
+    internal override (string[] Symbols, string[] Suffix) GetSymbolComponents() => ([Amount.ToString()], []);
 }

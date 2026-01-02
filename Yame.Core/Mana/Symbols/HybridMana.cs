@@ -16,5 +16,10 @@ public record HybridMana(ManaSymbol Left, ManaSymbol Right) : ManaSymbol
 
     public override int GetDevotion(ManaColor color) => Left.GetDevotion(color) + Right.GetDevotion(color);
 
-    public override string ToString() => $"{{{Left}/{Right}}}";
+    internal override (string[] Symbols, string[] Suffix) GetSymbolComponents()
+    {
+        var l = Left.GetSymbolComponents();
+        var r = Right.GetSymbolComponents();
+        return ([.. l.Symbols, .. r.Symbols], [.. l.Suffix, .. r.Suffix]);
+    }
 }
