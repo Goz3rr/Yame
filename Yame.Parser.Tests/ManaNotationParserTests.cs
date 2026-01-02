@@ -60,7 +60,6 @@ public class ManaNotationParserTests
     [Theory]
     [InlineData("{X}", 'X')]
     [InlineData("{Y}", 'Y')]
-    [InlineData("{Z}", 'Z')]
     public void Parse_VariableMana_ParsesCorrectly(string input, char expected)
     {
         var result = _sut.Parse(input);
@@ -152,6 +151,8 @@ public class ManaNotationParserTests
     [InlineData("{P}")]
     [InlineData("{P/B}}")]
     [InlineData("{/P}")]
+    [InlineData("{P/P}")]
+    [InlineData("{R/P/P}")]
     [InlineData("{2/P}")]
     [InlineData("{C/P}")]
     public void Parse_InvalidPhyrexian_Throws(string input)

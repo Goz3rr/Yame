@@ -67,7 +67,7 @@ public partial class ManaNotationParser
 
         return token switch
         {
-            "X" or "Y" or "Z" => new VariableMana(token[0]),
+            "X" or "Y" => new VariableMana(token[0]),
             "C" => new ColorlessMana(),
             "S" => throw new NotImplementedException(),
             "L" => throw new NotImplementedException(),

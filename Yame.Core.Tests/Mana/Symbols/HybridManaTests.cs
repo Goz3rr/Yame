@@ -8,9 +8,7 @@ public class HybridManaTests
     [Fact]
     public void HybridMana_UsesHighestManaValue()
     {
-        var hybrid = new HybridMana(
-            new GenericMana(2),
-            new ColoredMana(ManaColor.White));
+        var hybrid = new HybridMana(2, ManaColor.White);
 
         hybrid.ManaValue.Should().Be(2);
     }
@@ -22,6 +20,26 @@ public class HybridManaTests
 
         mana.ColorIdentity.Should()
             .BeEquivalentTo([ManaColor.Green, ManaColor.Blue]);
+    }
+
+    [Fact]
+    public void HybridMana_WithGeneric_ColorIdentity_IsOnlyColor()
+    {
+        var mana = new HybridMana(2, ManaColor.Red);
+
+        mana.ColorIdentity.Should()
+            .BeEquivalentTo([ManaColor.Red]);
+    }
+
+    [Fact]
+    public void HybridMana_WithPhyrexian_ColorIdentity_IsUnionOfSides()
+    {
+        var mana = new HybridMana(
+            new PhyrexianMana(ManaColor.Red),
+            new PhyrexianMana(ManaColor.Black));
+
+        mana.ColorIdentity.Should()
+            .BeEquivalentTo([ManaColor.Red, ManaColor.Black]);
     }
 
     [Fact]
