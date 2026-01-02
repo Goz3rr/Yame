@@ -1,4 +1,5 @@
 using Yame.Core.Mana;
+using Yame.Core.Mana.Symbols;
 
 namespace Yame.Parser.Tests;
 
@@ -19,7 +20,6 @@ public class ManaNotationParserTests
     }
 
     [Theory]
-    [InlineData("{C}", ManaColor.Colorless)]
     [InlineData("{W}", ManaColor.White)]
     [InlineData("{U}", ManaColor.Blue)]
     [InlineData("{B}", ManaColor.Black)]
@@ -34,7 +34,17 @@ public class ManaNotationParserTests
             .Which.Color.Should().Be(expected);
     }
 
+    [Fact]
+    public void Parse_ColorlessMana_ParsesCorrectly()
+    {
+        var result = _sut.Parse("{C}");
+
+        result.Symbols.Should().ContainSingle()
+            .Which.Should().BeOfType<ColorlessMana>();
+    }
+
     [Theory]
+    [InlineData("{0}", 0)]
     [InlineData("{1}", 1)]
     [InlineData("{2}", 2)]
     [InlineData("{10}", 10)]
@@ -82,31 +92,35 @@ public class ManaNotationParserTests
     }
 
     [Theory]
-    [InlineData("{C/W}", ManaColor.Colorless, ManaColor.White)]
-    [InlineData("{2/B}", 2, ManaColor.Black)]
-    public void Parse_MonoColorHybridMana_ParsesCorrectly(
-    string input,
-    object leftExpected,
-    ManaColor rightExpected)
+    [InlineData("{C/W}", ManaColor.White)]
+    [InlineData("{C/U}", ManaColor.Blue)]
+    public void Parse_ColorlessHybridMana_ParsesCorrectly(string input, ManaColor color)
     {
         var result = _sut.Parse(input);
 
         var hybrid = result.Symbols.Should().ContainSingle()
             .Which.Should().BeOfType<HybridMana>().Which;
 
-        if (leftExpected is int generic)
-        {
-            hybrid.Left.Should().BeOfType<GenericMana>()
-                .Which.Amount.Should().Be(generic);
-        }
-        else
-        {
-            hybrid.Left.Should().BeOfType<ColoredMana>()
-                .Which.Color.Should().Be((ManaColor)leftExpected);
-        }
+        hybrid.Left.Should().BeOfType<ColorlessMana>();
+        hybrid.Right.Should().BeOfType<ColoredMana>()
+            .Which.Color.Should().Be(color);
+    }
+
+    [Theory]
+    [InlineData("{2/W}", 2, ManaColor.White)]
+    [InlineData("{3/U}", 3, ManaColor.Blue)]
+    public void Parse_GenericHybridMana_ParsesCorrectly(string input, int genericExpected, ManaColor colorExpected)
+    {
+        var result = _sut.Parse(input);
+
+        var hybrid = result.Symbols.Should().ContainSingle()
+            .Which.Should().BeOfType<HybridMana>().Which;
+
+        hybrid.Left.Should().BeOfType<GenericMana>()
+            .Which.Amount.Should().Be(genericExpected);
 
         hybrid.Right.Should().BeOfType<ColoredMana>()
-            .Which.Color.Should().Be(rightExpected);
+            .Which.Color.Should().Be(colorExpected);
     }
 
     [Theory]
@@ -125,7 +139,6 @@ public class ManaNotationParserTests
     [Theory]
     [InlineData("{G/P}", ManaColor.Green)]
     [InlineData("{U/P}", ManaColor.Blue)]
-    [InlineData("{C/P}", ManaColor.Colorless)]
     public void Parse_PhyrexianMana_ParsesCorrectly(string input, ManaColor expected)
     {
         var result = _sut.Parse(input);
@@ -140,6 +153,7 @@ public class ManaNotationParserTests
     [InlineData("{P/B}}")]
     [InlineData("{/P}")]
     [InlineData("{2/P}")]
+    [InlineData("{C/P}")]
     public void Parse_InvalidPhyrexian_Throws(string input)
     {
         Action act = () => _sut.Parse(input);
@@ -181,26 +195,6 @@ public class ManaNotationParserTests
         Action act = () => _sut.Parse(input);
 
         act.Should().Throw<FormatException>();
-    }
-
-    [Fact]
-    public void Parse_SnowMana_ParseAsColorless()
-    {
-        var result = _sut.Parse("{S}");
-
-        result.Symbols.Should().ContainSingle()
-            .Which.Should().BeOfType<ColoredMana>()
-            .Which.Color.Should().Be(ManaColor.Colorless);
-    }
-
-    [Fact]
-    public void Parse_LegendaryMana_ParseAsColorless()
-    {
-        var result = _sut.Parse("{L}");
-
-        result.Symbols.Should().ContainSingle()
-            .Which.Should().BeOfType<ColoredMana>()
-            .Which.Color.Should().Be(ManaColor.Colorless);
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Yame.Core.Mana;
+using Yame.Core.Mana.Symbols;
 
 namespace Yame.Parser;
 
@@ -11,7 +12,7 @@ public partial class ManaNotationParser
     public ManaCost Parse(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
-            return new ManaCost([]);
+            return new ManaCost();
 
         var symbols = TokenRegex().Matches(input)
             .Select(m => m.Groups[1].Value)
@@ -35,9 +36,6 @@ public partial class ManaNotationParser
         if (parts[^1] == "P")
         {
             var colors = parts[..^1].Select(p => new PhyrexianMana(ManaColorHelper.Parse(p))).ToList();
-
-            if (colors.Count > 1 && colors.Any(c => c.Color == ManaColor.Colorless))
-                throw new FormatException($"Invalid phyrexian mana symbol: {{{token}}}");
 
             return colors.Count switch
             {
@@ -72,11 +70,11 @@ public partial class ManaNotationParser
 
         // TODO: Snow
         if (token == "S")
-            return new ColoredMana(ManaColor.Colorless);
+            throw new NotImplementedException();
 
         // TODO: Legendary
         if (token == "L")
-            return new ColoredMana(ManaColor.Colorless);
+            throw new NotImplementedException();
 
         if (token.Length == 1)
             return new ColoredMana(ManaColorHelper.Parse(token));
